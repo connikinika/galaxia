@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body class="centrado">
+    <main class="caja">
+        <h1>Admin</h1>
+        <form method="post" th:action="@{/admin/login}">
+            <input name="usuario" placeholder="Usuario" autocomplete="username" required>
+            <input name="clave" type="password" placeholder="Clave" autocomplete="current-password" required>
+            <button type="submit">Entrar</button>
+            <p class="error" th:if="${error}" th:text="${error}"></p>
+        </form>
+        <a class="suave" th:href="@{/entrada}">Volver</a>
+    </main>
+</body>
+</html>

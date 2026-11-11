@@ -1,0 +1,14 @@
+# Prueba local: docker compose up --build
+services:
+  galaxia:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      ADMIN_USUARIO: admin
+      ADMIN_CLAVE: admin123
+      APP_URL_BASE: http://localhost:8080
+    volumes:
+      - uploads:/app/uploads
+volumes:
+  uploads:

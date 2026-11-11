@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrada rápida</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body class="centrado">
+    <main class="caja">
+        <div class="grande" th:text="${ajustes.emoji}">🌻</div>
+        <h1>Tu código</h1>
+        <form method="post" th:action="@{/entrada}">
+            <input name="codigo" class="codigo-input" placeholder="XXXX-XXXX" autocomplete="off" autocapitalize="characters" autofocus required>
+            <button type="submit">Entrar</button>
+            <p class="error" th:if="${error}" th:text="${error}"></p>
+        </form>
+        <a class="suave" th:href="@{/admin/login}">Soy admin</a>
+    </main>
+</body>
+</html>

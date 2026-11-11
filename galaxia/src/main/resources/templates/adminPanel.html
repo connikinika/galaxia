@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Panel admin</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body>
+<div class="panel">
+    <header class="fila">
+        <h1>Panel admin</h1>
+        <span class="fila">
+            <a class="boton" th:href="@{/admin/vista-previa}" target="_blank">Ver como invitado</a>
+            <a class="boton gris" th:href="@{/admin/logout}">Salir</a>
+        </span>
+    </header>
+    <p class="aviso" th:if="${mensaje}" th:text="${mensaje}"></p>
+
+    <section class="tarjeta">
+        <h2>1. Contenido</h2>
+        <form method="post" th:action="@{/admin/ajustes}" enctype="multipart/form-data">
+            <label>Título</label>
+            <input name="titulo" th:value="${ajustes.titulo}" required>
+            <label>Emoji</label>
+            <input name="emoji" th:value="${ajustes.emoji}" maxlength="4" required>
+            <label>Frases que flotan (una por línea)</label>
+            <textarea name="frases" th:text="${ajustes.frases}"></textarea>
+            <label>Música de fondo</label>
+            <input type="file" name="musica" accept="audio/*" data-previa="prev-musica">
+            <audio id="prev-musica" controls th:if="${ajustes.musica != null}" th:src="@{'/media/' + ${ajustes.musica}}"></audio>
+            <audio id="prev-musica" controls hidden th:if="${ajustes.musica == null}"></audio>
+            <label>Video de fondo</label>
+            <input type="file" name="video" accept="video/*" data-previa="prev-video">
+            <video id="prev-video" controls muted playsinline th:if="${ajustes.video != null}" th:src="@{'/media/' + ${ajustes.video}}"></video>
+            <video id="prev-video" controls muted playsinline hidden th:if="${ajustes.video == null}"></video>
+            <label>URL base del QR (usa la IP de tu PC para escanear desde el celular)</label>
+            <input name="urlBase" th:value="${ajustes.urlBase}" placeholder="http://192.168.1.10:8080">
+            <button type="submit">Guardar cambios</button>
+        </form>
+        <div class="fila" style="margin-top:10px">
+            <form method="post" th:action="@{/admin/ajustes/quitar/musica}" th:if="${ajustes.musica != null}"><button class="gris chico">Quitar música</button></form>
+            <form method="post" th:action="@{/admin/ajustes/quitar/video}" th:if="${ajustes.video != null}"><button class="gris chico">Quitar video</button></form>
+        </div>
+    </section>
+
+    <section class="tarjeta" id="codigos">
+        <h2>2. Contraseñas de entrada rápida</h2>
+        <form method="post" th:action="@{/admin/codigos/generar}" class="fila">
+            <input name="etiqueta" placeholder="Para quién (opcional)">
+            <button type="submit">Generar código</button>
+        </form>
+        <p class="suave" th:if="${codigos.isEmpty()}">Aún no hay códigos. Genera el primero.</p>
+        <div class="rejilla">
+            <article class="codigo" th:each="c : ${codigos}">
+                <img th:src="@{/admin/codigos/{id}/qr.png(id=${c.id})}" alt="Código QR">
+                <div class="valor" th:text="${c.valorFormateado}"></div>
+                <div class="suave" th:text="${(c.etiqueta.isEmpty() ? 'Sin nombre' : c.etiqueta) + ' · entradas: ' + c.usos}"></div>
+                <div class="fila">
+                    <button class="chico" type="button" th:data-enlace="${ajustes.urlBaseLimpia + '/entrada/' + c.valor}" onclick="copiar(this)">Copiar enlace</button>
+                    <a class="boton chico gris" th:href="@{/admin/codigos/{id}/qr.png(id=${c.id})}" download="qr.png">Bajar QR</a>
+                    <form method="post" th:action="@{/admin/codigos/{id}/eliminar(id=${c.id})}"><button class="chico rojo">Quitar</button></form>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+<script>
+function copiar(b){navigator.clipboard.writeText(b.dataset.enlace).then(()=>{b.textContent='¡Copiado!';setTimeout(()=>b.textContent='Copiar enlace',1500)})}
+document.querySelectorAll('[data-previa]').forEach(i=>i.onchange=()=>{const p=document.getElementById(i.dataset.previa),f=i.files[0];if(f){p.src=URL.createObjectURL(f);p.hidden=false}});
+</script>
+</body>
+</html>

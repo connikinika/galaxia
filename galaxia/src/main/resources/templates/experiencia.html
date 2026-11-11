@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <title th:text="${ajustes.titulo}">Para ti</title>
+    <link rel="stylesheet" th:href="@{/css/estilo.css}">
+</head>
+<body class="escena">
+    <video id="video" muted loop playsinline th:if="${ajustes.video != null}" th:src="@{'/media/' + ${ajustes.video}}"></video>
+    <canvas id="estrellas"></canvas>
+    <div class="agujero"></div>
+    <h1 class="escena-titulo"><span id="emoji" th:text="${ajustes.emoji}"></span><br><span th:text="${ajustes.titulo}"></span></h1>
+    <ul id="frases" hidden><li th:each="f : ${ajustes.listaFrases}" th:text="${f}"></li></ul>
+    <audio id="musica" loop preload="auto" th:if="${ajustes.musica != null}" th:src="@{'/media/' + ${ajustes.musica}}"></audio>
+    <button id="mute" class="flota-boton" hidden>🔊</button>
+    <a class="volver" th:if="${vistaPrevia}" th:href="@{/admin}">← Volver al panel</a>
+    <div id="inicio"><b th:text="${ajustes.emoji}"></b><span>Toca para iniciar</span></div>
+    <script th:src="@{/js/experiencia.js}"></script>
+</body>
+</html>
